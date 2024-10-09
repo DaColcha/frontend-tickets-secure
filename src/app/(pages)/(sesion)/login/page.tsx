@@ -30,6 +30,10 @@ export default function Login() {
           contraseña,
         }
       );
+      console.log({
+        nombreSitio,
+        contraseña,
+      })
 
       if (response.status === 200) {
         sessionStorage.setItem("nombreSitio", nombreSitio);
@@ -58,13 +62,13 @@ export default function Login() {
         viewport={{ once: false, amount: 0.5 }}
         className="sm:mx-auto sm:w-full sm:max-w-sm"
       >
-        <Image
+        {/* <Image
           src="/assets/logoLeones_2.png"
           alt="LogoLeones"
           width={250}
           height={250}
           className="mx-auto "
-        />
+        /> */}
         <Divider
           className="bg-[#d4b47e] text-center mt-5"
           orientation="horizontal"
@@ -80,12 +84,12 @@ export default function Login() {
         <Card className="mt-10 p-5 border-3 border-[#d4b47e] sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmitLogin}>
             <CardHeader className="flex flex-col justify-center items-center">
-              <Image
+              { <Image
                 src="/assets/logoLeones.png"
                 alt="LogoLeones"
                 width={150}
                 height={150}
-              />
+              /> }
               <h1 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black">
                 INICIAR SESIÓN
               </h1>
