@@ -62,13 +62,13 @@ export default function Login() {
         viewport={{ once: false, amount: 0.5 }}
         className="sm:mx-auto sm:w-full sm:max-w-sm"
       >
-        {/* <Image
+        {/* { <Image
           src="/assets/logoLeones_2.png"
           alt="LogoLeones"
           width={250}
           height={250}
           className="mx-auto "
-        /> */}
+        />} */}
         <Divider
           className="bg-[#d4b47e] text-center mt-5"
           orientation="horizontal"
