@@ -16,10 +16,11 @@ import {
 
 import Image from "next/image";
 import Link from "next/link";
-import { useNombreSitio } from "@/app/(pages)/localidades/[localidad]/[zona]/[tipo]/utils";
+import {useNombreSitio, useUsuario} from "@/app/(pages)/localidades/[localidad]/[zona]/[tipo]/utils";
 
 export default function NavbarWrapper() {
   const nombreSitio = useNombreSitio();
+  const usuario = useUsuario()
 
   const handleLogout = () => {
     sessionStorage.clear();
@@ -35,13 +36,12 @@ export default function NavbarWrapper() {
           width={80}
           height={80}
         />
-        <Image
-          src="/assets/logoLeones.png"
-          alt="logoLeones"
-          width={80}
-          height={80}
-        />
       </NavbarBrand>
+      <NavbarContent className="hidden sm:flex gap-4" justify="start">
+        <NavbarItem className="font-bold text-inherit">
+          {usuario}
+        </NavbarItem>
+      </NavbarContent>
       <NavbarContent className="hidden sm:flex gap-4" justify="start">
         <NavbarItem className="font-bold text-inherit">
           Punto de venta:

@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 import { fadeIn } from "../../localidades/variants";
 
 export default function Login() {
-  const [nombreSitio, setNombreSitio] = useState("");
+  const [usuario, setUsuario] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [error, setError] = useState(false);
   const [exist, setExist] = useState(false);
@@ -24,20 +24,17 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API}/sitio-venta/login`,
+        `${process.env.NEXT_PUBLIC_API}/auth/login`,
         {
-          nombreSitio,
-          contraseña,
+          usuario: usuario,
+          contrasena: contraseña,
         }
       );
-      console.log({
-        nombreSitio,
-        contraseña,
-      })
 
       if (response.status === 200) {
-        sessionStorage.setItem("nombreSitio", nombreSitio);
-        if (response.data === "admin") {
+        sessionStorage.setItem("usuario", response.data.usuario);
+        sessionStorage.setItem("nombreSitio", response.data.sitio);
+        if (response.data.rol === "admin") {
           window.location.href = "/panel";
         } else {
           window.location.href = "/localidades";
@@ -100,12 +97,12 @@ export default function Login() {
               <Input
                 variant="faded"
                 isRequired
-                id="nombreSitio"
+                id="usuario"
                 type="text"
                 label="Sitio de venta"
                 labelPlacement="inside"
-                value={nombreSitio}
-                onChange={(e) => setNombreSitio(e.target.value)}
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
                 className="block w-full  ring-gray-300  sm:text-sm sm:leading-6"
               />
               {exist && (

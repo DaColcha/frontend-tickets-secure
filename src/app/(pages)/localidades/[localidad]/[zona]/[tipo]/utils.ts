@@ -89,6 +89,16 @@ export function useNombreSitio() {
   return nombreSitio;
 }
 
+export function useUsuario() {
+  const [usuario, setUsuario] = useState("");
+
+  useEffect(() => {
+    setUsuario(sessionStorage.getItem("usuario") || "");
+  }, []);
+
+  return usuario;
+}
+
 interface LocalidadParams {
   params: {
     localidad: string;

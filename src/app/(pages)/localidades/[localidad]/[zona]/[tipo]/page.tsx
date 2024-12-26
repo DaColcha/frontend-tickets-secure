@@ -255,14 +255,14 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                   <p>{groupSelected.join(", ")}</p>
                 </div>
                 <div className="inline-flex items-center gap-5 ml-5">
-                  <div className="inline-flex items-center gap-1">
-                    <p>Abonados:</p>
-                    <div className="w-4 h-4 bg-[#d4b47e] rounded-full"></div>
-                  </div>
-                  <div className="inline-flex items-center gap-2">
-                    <p>No abonados:</p>
-                    <div className="w-4 h-4 bg-[#163056] rounded-full"></div>
-                  </div>
+                  {/*<div className="inline-flex items-center gap-1">*/}
+                  {/*  <p>Abonados:</p>*/}
+                  {/*  <div className="w-4 h-4 bg-[#d4b47e] rounded-full"></div>*/}
+                  {/*</div>*/}
+                  {/*<div className="inline-flex items-center gap-2">*/}
+                  {/*  <p>No abonados:</p>*/}
+                  {/*  <div className="w-4 h-4 bg-[#163056] rounded-full"></div>*/}
+                  {/*</div>*/}
                   <div className="inline-flex items-center gap-2">
                     <p>Disponibles:</p>
                     <div className="w-4 h-4 bg-content3 rounded-full"></div>
@@ -304,12 +304,11 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                           onChange={handleSelected}
                           isDisabled={
                             (!isSwitchOn && asiento.estado === "N") ||
-                            asiento.tipoCompra === "A" ||
                             (isSwitchOn && asiento.estado === "D")
                           }
                         >
                           <Checkbox
-                            value={asiento.numAsiento}
+                            value={asiento.numero}
                             color="primary"
                             classNames={{
                               base: cn(
@@ -320,7 +319,6 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                                   ? "bg-[#163056]"
                                   : "bg-content2",
                                 "data-[selected=true]:bg-green-500",
-                                asiento.tipoCompra === "A" && "bg-[#d4b47e]",
                                 isSwitchOn &&
                                   asiento.estado === "D" &&
                                   "bg-gray-300"
@@ -334,7 +332,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                                   : ""
                               }
                             >
-                              {asiento.numAsiento}
+                              {asiento.numero}
                             </p>
                           </Checkbox>
                         </CheckboxGroup>
