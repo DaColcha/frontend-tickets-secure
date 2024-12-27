@@ -50,6 +50,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   const [groupSelected, setGroupSelected] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [cedula, setCedula] = useState("");
   const [clientName, setClientName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -59,6 +60,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   const [metodoPago, setMetodoPago] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [cedulaDisabled, setCedulaDisabled] = useState(false);
   const [clientNameDisabled, setClientNameDisabled] = useState(false);
   const [emailDisabled, setEmailDisabled] = useState(false);
   const [phoneDisabled, setPhoneDisabled] = useState(false);
@@ -103,25 +105,26 @@ export default function Asientos({ params }: LocalidadesPageProps) {
     e.preventDefault();
     setIsSubmitting(true);
     const dataToSend = {
-      comprador: {
-        correoComprador: email,
-        nombreComprador: clientName,
-        telefonoComprador: phone,
-      },
-      asientosSeleccionados: groupSelected,
-      tipoCompra: tipoCompra === "abonado" ? "A" : "N",
       localidad: params.localidad,
       zona: params.zona,
       tipo: params.tipo,
-      sitioVenta: nombreSitio,
-      pago: tipoPago || null,
-      plazo: plazo === "" ? null : `${plazo} meses`,
+      comprador: {
+        cedula: cedula,
+        nombre: clientName,
+        correo: email,
+        telefono: phone,
+      },
+      asientosSeleccionados: groupSelected,
+      tipoCompra: tipoCompra === "abonado" ? "A" : "N",
+      vendedor: nombreSitio,
+      formaPago: tipoPago || null,
     };
 
     try {
       await postAsientos(dataToSend);
       onCloseRef.current();
       resetForm();
+      setCedulaDisabled(false);
       setClientNameDisabled(false);
       setEmailDisabled(false);
       setPhoneDisabled(false);
@@ -156,6 +159,10 @@ export default function Asientos({ params }: LocalidadesPageProps) {
     setClientName(e.target.value);
   };
 
+  const handleCedulaClient = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCedula(e.target.value);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
 
@@ -179,10 +186,12 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   };
 
   const handleClienteSeleccionado = (cliente: any) => {
+    setCedula(cliente.cedula);
     setClientName(cliente.nombreComprador);
     setEmail(cliente.correoComprador);
     setPhone(cliente.telefonoComprador);
     modal2.onClose();
+    setCedulaDisabled(true);
     setClientNameDisabled(true);
     setEmailDisabled(true);
     setPhoneDisabled(true);
@@ -429,6 +438,15 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                         </RadioGroup>
 
                         <Input
+                            disabled={cedulaDisabled}
+                            id="client-cedula"
+                            label="Cédula"
+                            isRequired={tipoCompra === "abonado"}
+                            value={cedula}
+                            onChange={(e) => handleCedulaClient(e)}
+                        />
+
+                        <Input
                           disabled={clientNameDisabled}
                           id="client-name"
                           label="Nombre"
@@ -469,7 +487,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                           onChange={(e) => setMetodoPago(e.target.value)}
                         >
                           <SelectItem key="contado">Contado</SelectItem>
-                          <SelectItem key="credito">Crédito</SelectItem>
+                          <SelectItem key="otro">Otro</SelectItem>
                         </Select>
 
                         {metodoPago === "contado" && (
@@ -486,7 +504,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                           </Select>
                         )}
 
-                        {metodoPago === "credito" && (
+                        {metodoPago === "otro" && (
                           <>
                             <Select
                               id="metodo-pago-credito"
@@ -497,22 +515,12 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                               onChange={(e) => setTipoPago(e.target.value)}
                             >
                               <SelectItem key={3}>
-                                Tarjeta de crédito
+                                Tarjeta crédito/débito
                               </SelectItem>
                               <SelectItem key={4}>
                                 Convenio instituciones
                               </SelectItem>
                             </Select>
-                            <Input
-                              className="max-w-fit"
-                              id="plazo"
-                              label="Plazos en meses"
-                              isRequired={tipoCompra === "abonado"}
-                              type="number"
-                              value={plazo}
-                              onChange={(e) => setPlazo(e.target.value)}
-                              maxLength={10}
-                            />
                           </>
                         )}
 
