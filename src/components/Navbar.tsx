@@ -16,15 +16,28 @@ import {
 
 import Image from "next/image";
 import Link from "next/link";
-import {useNombreSitio, useUsuario} from "@/app/(pages)/localidades/[localidad]/[zona]/[tipo]/utils";
+import { useNombreSitio, useUsuario } from "@/app/(pages)/localidades/[localidad]/[zona]/[tipo]/utils";
 
 export default function NavbarWrapper() {
   const nombreSitio = useNombreSitio();
   const usuario = useUsuario()
 
-  const handleLogout = () => {
-    sessionStorage.clear();
-    window.location.href = "/login";
+  const handleLogout = async () => {
+
+    try {
+
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+      })
+
+      if (response.ok) {
+        console.log('Sesión cerrada correctamente');
+      } else {
+        console.error('Error al cerrar sesión:', response);
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   };
 
   return (

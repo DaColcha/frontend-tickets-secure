@@ -5,12 +5,15 @@ interface general {
   zona: string;
 }
 
+const token = sessionStorage.getItem("token")
+
 export async function getGeneral({ zona }: general) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/general/${zona}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
     });
     if (!res.ok) {
@@ -33,6 +36,7 @@ export async function postGeneral({ zona, boletos }: postGeneral) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify({ zona, boletos }),
     });
@@ -53,6 +57,7 @@ export async function postGeneralAbonado({ params }: GeneralAbonado) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(params),
       }

@@ -9,6 +9,8 @@ interface NoAbonadosProps {
   groupSelected: number[];
 }
 
+const token = sessionStorage.getItem("token")
+
 export async function limpiarNoAbonados({
   params,
   groupSelected,
@@ -20,6 +22,7 @@ export async function limpiarNoAbonados({
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           localidad: params.localidad,

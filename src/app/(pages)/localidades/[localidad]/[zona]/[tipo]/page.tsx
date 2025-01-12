@@ -44,6 +44,7 @@ import { LocalidadesPageProps } from "@/types/localidad";
 import { getAsientos, postAsientos } from "@/lib/actions/asientos.actions";
 import { limpiarNoAbonados } from "@/lib/actions/no-abonados.actions";
 import { getVendidosLocalidad } from "@/lib/actions/total-vendidos.actions";
+import CreditCard from "@/components/CreditCard";
 
 export default function Asientos({ params }: LocalidadesPageProps) {
   const [asientos, setAsientos] = useState<any[]>([]);
@@ -67,9 +68,10 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   const [isCleaning, setIsCleaning] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const modal2 = useDisclosure();
-  const onCloseRef = useRef<() => void>(() => {});
+  const onCloseRef = useRef<() => void>(() => { });
   const nombreSitio = useNombreSitio();
   const [disponiblesLocalidad, setDisponiblesLocalidad] = useState(0);
+  const [showCreditCard, setShowCreditCard] = useState(false);
 
   useEffect(() => {
     fetchAsientos();
@@ -78,11 +80,13 @@ export default function Asientos({ params }: LocalidadesPageProps) {
 
   const fetchAsientos = async () => {
     const fetchedAsientos = await getAsientos(params);
+    console.log(fetchedAsientos, "fech asientos");
     setAsientos(fetchedAsientos);
   };
 
   const fetchVendidosLocalidad = async () => {
     const fetchedVendidosLocalidad = await getVendidosLocalidad({ params });
+    console.log(fetchedVendidosLocalidad, "fetch vendidos localidad");
     setDisponiblesLocalidad(fetchedVendidosLocalidad);
   };
 
@@ -329,8 +333,8 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                                   : "bg-content2",
                                 "data-[selected=true]:bg-green-500",
                                 isSwitchOn &&
-                                  asiento.estado === "D" &&
-                                  "bg-gray-300"
+                                asiento.estado === "D" &&
+                                "bg-gray-300"
                               ),
                             }}
                           >
@@ -382,202 +386,180 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                       Nueva compra
                     </ModalHeader>
                     <ModalBody>
-                      <div className="inline-flex gap-2 items-center">
-                        <p className="font-semibold text-lg">Asiento/s:</p>
-                        <p className="font-light">{groupSelected.join("-")}</p>
-                      </div>
-                      <Button
-                        startContent={<SearchIcon />}
-                        size="sm"
-                        onPress={modal2.onOpen}
-                        className="w-fit  bg-[#163056] font-semibold"
-                        color="primary"
-                      >
-                        Cliente existente
-                      </Button>
-                      <Modal
-                        size="xl"
-                        placement="center"
-                        isOpen={modal2.isOpen}
-                        onClose={modal2.onClose}
-                      >
-                        <ModalContent>
-                          {(onClose) => {
-                            onCloseRef.current = onClose;
-                            return (
-                              <>
-                                <ModalHeader className="flex justify-center text-xl">
-                                  Información de clientes
-                                </ModalHeader>
-                                <ModalBody>
-                                  <TablaClientes
-                                    onClienteSeleccionado={
-                                      handleClienteSeleccionado
-                                    }
-                                  />
-                                </ModalBody>
-                              </>
-                            );
-                          }}
-                        </ModalContent>
-                      </Modal>
-                      <form
-                        className="grid gap-4"
-                        onSubmit={handlePostAsientos}
-                      >
-                        <RadioGroup
-                          isRequired
-                          id="tipo-compra"
-                          orientation="horizontal"
-                          value={tipoCompra}
-                          color="primary"
-                          onChange={(e) => setTipoCompra(e.target.value)}
-                        >
-                          <Radio value="abonado">Abonado</Radio>
-                          <Radio value="no-abonado">No abonado</Radio>
-                        </RadioGroup>
-
-                        <Input
-                            disabled={cedulaDisabled}
-                            id="client-cedula"
-                            label="Cédula"
-                            isRequired={tipoCompra === "abonado"}
-                            value={cedula}
-                            onChange={(e) => handleCedulaClient(e)}
-                        />
-
-                        <Input
-                          disabled={clientNameDisabled}
-                          id="client-name"
-                          label="Nombre"
-                          isRequired={tipoCompra === "abonado"}
-                          value={clientName}
-                          onChange={(e) => handleNameClient(e)}
-                        />
-
-                        <Input
-                          disabled={emailDisabled}
-                          id="email"
-                          label="Correo"
-                          isRequired={tipoCompra === "abonado"}
-                          type="email"
-                          value={email}
-                          errorMessage={emailError}
-                          onChange={(e) => handleInputChange(e)}
-                        />
-
-                        <Input
-                          disabled={phoneDisabled}
-                          id="phone"
-                          label="Teléfono"
-                          isRequired={tipoCompra === "abonado"}
-                          type="tel"
-                          value={phone}
-                          errorMessage={phoneError}
-                          onChange={(e) => handleInputChange(e)}
-                          maxLength={10}
-                        />
-
-                        <Select
-                          id="metodo-pago"
-                          isRequired={tipoCompra === "abonado"}
-                          label="Forma de pago"
-                          placeholder="Seleccione la forma de pago"
-                          value={tipoPago}
-                          onChange={(e) => setMetodoPago(e.target.value)}
-                        >
-                          <SelectItem key="contado">Contado</SelectItem>
-                          <SelectItem key="otro">Otro</SelectItem>
-                        </Select>
-
-                        {metodoPago === "contado" && (
-                          <Select
-                            id="metodo-pago-contado"
-                            isRequired={tipoCompra === "abonado"}
-                            label="Método de pago"
-                            placeholder="Seleccione el método de pago"
-                            value={metodoPago}
-                            onChange={(e) => setTipoPago(e.target.value)}
+                      {!showCreditCard ? (
+                        <>
+                          <div className="inline-flex gap-2 items-center">
+                            <p className="font-semibold text-lg">Asiento/s:</p>
+                            <p className="font-light">{groupSelected.join("-")}</p>
+                          </div>
+                          <Button
+                            startContent={<SearchIcon />}
+                            size="sm"
+                            onPress={modal2.onOpen}
+                            className="w-fit bg-[#163056] font-semibold"
+                            color="primary"
                           >
-                            <SelectItem key={1}>Efectivo</SelectItem>
-                            <SelectItem key={2}>Transferencia</SelectItem>
-                          </Select>
-                        )}
-
-                        {metodoPago === "otro" && (
-                          <>
-                            <Select
-                              id="metodo-pago-credito"
-                              isRequired={tipoCompra === "abonado"}
-                              label="Método de pago"
-                              placeholder="Seleccione el método de pago"
-                              value={metodoPago}
-                              onChange={(e) => setTipoPago(e.target.value)}
+                            Cliente existente
+                          </Button>
+                          <form className="grid gap-4" onSubmit={handlePostAsientos}>
+                            {/* Campos del formulario */}
+                            <RadioGroup
+                              isRequired
+                              id="tipo-compra"
+                              orientation="horizontal"
+                              value={tipoCompra}
+                              color="primary"
+                              onChange={(e) => setTipoCompra(e.target.value)}
                             >
-                              <SelectItem key={3}>
-                                Tarjeta crédito/débito
-                              </SelectItem>
-                              <SelectItem key={4}>
-                                Convenio instituciones
-                              </SelectItem>
-                            </Select>
-                          </>
-                        )}
+                              <Radio value="abonado">Abonado</Radio>
+                              <Radio value="no-abonado">No abonado</Radio>
+                            </RadioGroup>
 
-                        <div className="text-center">
-                          <PDFDownloadLink
-                            document={
-                              <PDFGenerate
-                                data={{
-                                  nombre: clientName,
-                                  email: email,
-                                  telefono: phone,
-                                  tipoCompra: tipoCompra,
-                                  metodoPago: metodoPago,
-                                  tipoPago: tipoPago,
-                                  asientos: groupSelected.join(", "),
-                                  sitioVenta: nombreSitio,
-                                  pago: tipoPago,
-                                  plazo: plazo,
-                                  localidad: params.localidad,
-                                  zona: params.zona,
-                                  tipo: params.tipo,
-                                }}
-                              />
-                            }
-                            fileName="comprobante.pdf"
-                          >
-                            {({ loading }) =>
-                              loading ? (
-                                ""
-                              ) : (
-                                <Button
-                                  size="sm"
-                                  endContent={<DownloadIcon />}
-                                  className="w-fit bg-green-300 text-black font-semibold"
-                                >
-                                  Descargar comprobante
-                                </Button>
-                              )
-                            }
-                          </PDFDownloadLink>
-                        </div>
-                        <Divider />
-                        <ModalFooter>
-                          <Button
-                            className="w-full bg-red-500 text-white font-semibold"
-                            onPress={onClose}
-                          >
-                            Cancelar
-                          </Button>
-                          <Button
-                            type="submit"
-                            className="w-full bg-[#163056] text-white font-semibold"
-                          >
-                            {isSubmitting ? <Spinner /> : "Finalizar"}
-                          </Button>
-                        </ModalFooter>
-                      </form>
+                            <Input
+                              disabled={cedulaDisabled}
+                              id="client-cedula"
+                              label="Cédula"
+                              isRequired={tipoCompra === "abonado"}
+                              value={cedula}
+                              onChange={(e) => handleCedulaClient(e)}
+                            />
+
+                            <Input
+                              disabled={clientNameDisabled}
+                              id="client-name"
+                              label="Nombre"
+                              isRequired={tipoCompra === "abonado"}
+                              value={clientName}
+                              onChange={(e) => handleNameClient(e)}
+                            />
+
+                            <Input
+                              disabled={emailDisabled}
+                              id="email"
+                              label="Correo"
+                              isRequired={tipoCompra === "abonado"}
+                              type="email"
+                              value={email}
+                              errorMessage={emailError}
+                              onChange={(e) => handleInputChange(e)}
+                            />
+
+                            <Input
+                              disabled={phoneDisabled}
+                              id="phone"
+                              label="Teléfono"
+                              isRequired={tipoCompra === "abonado"}
+                              type="tel"
+                              value={phone}
+                              errorMessage={phoneError}
+                              onChange={(e) => handleInputChange(e)}
+                              maxLength={10}
+                            />
+
+                            <Select
+                              id="metodo-pago"
+                              isRequired={tipoCompra === "abonado"}
+                              label="Forma de pago"
+                              placeholder="Seleccione la forma de pago"
+                              value={metodoPago}
+                              onChange={(e) => setMetodoPago(e.target.value)}
+                            >
+                              <SelectItem key="contado">Contado</SelectItem>
+                              <SelectItem key="otro">Otro</SelectItem>
+                            </Select>
+
+                            {metodoPago === "contado" && (
+                              <Select
+                                id="metodo-pago-contado"
+                                isRequired={tipoCompra === "abonado"}
+                                label="Método de pago"
+                                placeholder="Seleccione el método de pago"
+                                value={metodoPago}
+                                onChange={(e) => setTipoPago(e.target.value)}
+                              >
+                                <SelectItem key={1}>Efectivo</SelectItem>
+                                <SelectItem key={2}>Transferencia</SelectItem>
+                              </Select>
+                            )}
+
+                            {metodoPago === "otro" && (
+                              <Select
+                                id="metodo-pago-credito"
+                                isRequired={tipoCompra === "abonado"}
+                                label="Método de pago"
+                                placeholder="Seleccione el método de pago"
+                                value={metodoPago}
+                                onChange={(e) => setTipoPago(e.target.value)}
+                              >
+                                <SelectItem key={3}>Tarjeta crédito/débito</SelectItem>
+                                <SelectItem key={4}>Convenio instituciones</SelectItem>
+                              </Select>
+                            )}
+
+                            <div className="text-center">
+                              <PDFDownloadLink
+                                document={
+                                  <PDFGenerate
+                                    data={{
+                                      nombre: clientName,
+                                      email: email,
+                                      telefono: phone,
+                                      tipoCompra: tipoCompra,
+                                      metodoPago: metodoPago,
+                                      tipoPago: tipoPago,
+                                      asientos: groupSelected.join(", "),
+                                      sitioVenta: nombreSitio,
+                                      pago: tipoPago,
+                                      plazo: plazo,
+                                      localidad: params.localidad,
+                                      zona: params.zona,
+                                      tipo: params.tipo,
+                                    }}
+                                  />
+                                }
+                                fileName="comprobante.pdf"
+                              >
+                                {({ loading }) =>
+                                  loading ? (
+                                    ""
+                                  ) : (
+                                    <Button
+                                      size="sm"
+                                      endContent={<DownloadIcon />}
+                                      className="w-fit bg-green-300 text-black font-semibold"
+                                    >
+                                      Descargar comprobante
+                                    </Button>
+                                  )
+                                }
+                              </PDFDownloadLink>
+                            </div>
+                            <Divider />
+                            <ModalFooter>
+                              <Button
+                                className="w-full bg-red-500 text-white font-semibold"
+                                onPress={onClose}
+                              >
+                                Cancelar
+                              </Button>
+                              <Button
+                                type={tipoPago === "3" ? "button" : "submit"}
+                                className="w-full bg-[#163056] text-white font-semibold"
+                                onClick={tipoPago === "3" ? () => setShowCreditCard(true) : undefined}
+                              >
+                                {isSubmitting ? <Spinner /> : tipoPago === "3" ? "Siguiente" : "Finalizar"}
+                              </Button>
+                            </ModalFooter>
+                          </form>
+                        </>
+                      ) : (
+                        <CreditCard
+                          onClose={() => {
+                            onClose;
+                            setShowCreditCard(false)
+                          }}
+                        />
+                      )}
                     </ModalBody>
                   </>
                 );
