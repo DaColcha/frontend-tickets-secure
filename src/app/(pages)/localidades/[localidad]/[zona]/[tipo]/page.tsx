@@ -37,14 +37,16 @@ import { maxColsValues, useNombreSitio } from "./utils";
 import { motion } from "framer-motion";
 import { fadeIn } from "../../../variants";
 import { DownloadIcon } from "@/components/DownloadIcon";
-import TablaClientes from "@/components/Clientes/TablaClientes";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { DeleteIcon } from "@/components/icons/DeleteIcon";
 import { LocalidadesPageProps } from "@/types/localidad";
-import { getAsientos, postAsientos } from "@/lib/actions/asientos.actions";
+import { getAsientos, postAsientos, postPayment } from "@/lib/actions/asientos.actions";
 import { limpiarNoAbonados } from "@/lib/actions/no-abonados.actions";
 import { getVendidosLocalidad } from "@/lib/actions/total-vendidos.actions";
 import CreditCard from "@/components/CreditCard";
+import { encryptCardData } from "@/lib/utils";
+import { Tarjeta } from "@/types/pago";
+import { obtenerPrecioPorTipo } from "@/types/precio.asientos";
 
 export default function Asientos({ params }: LocalidadesPageProps) {
   const [asientos, setAsientos] = useState<any[]>([]);
@@ -65,6 +67,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   const [clientNameDisabled, setClientNameDisabled] = useState(false);
   const [emailDisabled, setEmailDisabled] = useState(false);
   const [phoneDisabled, setPhoneDisabled] = useState(false);
+  const [aceptTerminos, setAceptTerminos] = useState(false);
   const [isCleaning, setIsCleaning] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const modal2 = useDisclosure();
@@ -72,6 +75,12 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   const nombreSitio = useNombreSitio();
   const [disponiblesLocalidad, setDisponiblesLocalidad] = useState(0);
   const [showCreditCard, setShowCreditCard] = useState(false);
+  const [dataCreditCard, setDataCreditCard] = useState<Tarjeta>({
+    numero: "",
+    nombreTitular: "",
+    cvv: "",
+    fechaVencimiento: "",
+  });
 
   useEffect(() => {
     fetchAsientos();
@@ -103,36 +112,70 @@ export default function Asientos({ params }: LocalidadesPageProps) {
     setMetodoPago("");
     setTipoPago("");
     setPlazo("");
+    setAceptTerminos(false);
   };
 
   const handlePostAsientos = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!aceptTerminos) {
+      toast.error("Debes aceptar los términos y condiciones para continuar.");
+      return;
+    }
+
+    if (tipoPago === "3" && !showCreditCard) {
+      setShowCreditCard(true);
+      return
+    }
+
     setIsSubmitting(true);
-    const dataToSend = {
-      localidad: params.localidad,
-      zona: params.zona,
-      tipo: params.tipo,
-      comprador: {
-        cedula: cedula,
-        nombre: clientName,
-        correo: email,
-        telefono: phone,
-      },
-      asientosSeleccionados: groupSelected,
-      tipoCompra: tipoCompra === "abonado" ? "A" : "N",
-      vendedor: nombreSitio,
-      formaPago: tipoPago || null,
-    };
 
     try {
+
+      const pricioAsiento = obtenerPrecioPorTipo(params.tipo);
+      const total = groupSelected.length * pricioAsiento;
+
+      const encryptedCardData = await encryptCardData(dataCreditCard);
+
+      const dataPayment = {
+        encryptedData: encryptedCardData,
+        total: parseFloat(total.toFixed(2)),
+        useCard: showCreditCard ? true : false,
+        formaPago: tipoPago === "3" ? "Tarjeta crédito/débito" : metodoPago,
+      }
+
+      console.log(dataPayment, "data payment");
+      const resPayment = await postPayment(dataPayment)
+      console.log(resPayment, "res payment");
+
+      const dataToSend = {
+        localidad: params.localidad,
+        zona: params.zona,
+        tipo: params.tipo,
+        comprador: {
+          cedula: cedula,
+          nombre: clientName,
+          correo: email,
+          telefono: phone,
+        },
+        asientosSeleccionados: groupSelected,
+        tipoCompra: tipoCompra === "abonado" ? "A" : "N",
+        vendedor: nombreSitio,
+        idPago: resPayment.id,
+      };
+      console.log(dataToSend, "data to send");
+
       await postAsientos(dataToSend);
+
       onCloseRef.current();
       resetForm();
       setCedulaDisabled(false);
       setClientNameDisabled(false);
       setEmailDisabled(false);
       setPhoneDisabled(false);
+
       await fetchAsientos();
+
       toast.success("Compra realizada con éxito");
     } catch (error) {
       toast.error("Error al realizar la compra");
@@ -354,7 +397,6 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                   );
                 })}
               </CardBody>
-              {/* )} */}
 
               <Divider />
               <CardFooter className="flex flex-col gap-4 justify-center">
@@ -391,6 +433,12 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                           <div className="inline-flex gap-2 items-center">
                             <p className="font-semibold text-lg">Asiento/s:</p>
                             <p className="font-light">{groupSelected.join("-")}</p>
+                          </div>
+                          <div className="inline-flex gap-2 items-center">
+                            <p className="font-semibold text-lg">Precio:</p>
+                            <p className="font-light">
+                              {groupSelected.length * obtenerPrecioPorTipo(params.tipo)}
+                            </p>
                           </div>
                           <Button
                             startContent={<SearchIcon />}
@@ -534,6 +582,27 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                                 }
                               </PDFDownloadLink>
                             </div>
+                            <div className="flex gap-1">
+                              <Checkbox
+                                color="primary"
+                                checked={plazo === "1"}
+                                onChange={() => setPlazo("1")}
+                                isSelected={aceptTerminos}
+                                onValueChange={setAceptTerminos}
+                              >
+                              </Checkbox>
+                              <span className="text-small font-semibold">
+                                Acepto los{" "}
+                                <a
+                                  href="/terminos-condiciones"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-500 hover:underline"
+                                >
+                                  términos y condiciones
+                                </a>
+                              </span>
+                            </div>
                             <Divider />
                             <ModalFooter>
                               <Button
@@ -543,9 +612,8 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                                 Cancelar
                               </Button>
                               <Button
-                                type={tipoPago === "3" ? "button" : "submit"}
+                                type="submit"
                                 className="w-full bg-[#163056] text-white font-semibold"
-                                onClick={tipoPago === "3" ? () => setShowCreditCard(true) : undefined}
                               >
                                 {isSubmitting ? <Spinner /> : tipoPago === "3" ? "Siguiente" : "Finalizar"}
                               </Button>
@@ -557,6 +625,12 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                           onClose={() => {
                             onClose;
                             setShowCreditCard(false)
+                          }}
+                          dataCreditCard={dataCreditCard}
+                          onUpdateCreditCard={(updatedData) => {
+                            setDataCreditCard(updatedData);
+                            const customEvent = { preventDefault: () => { } } as React.FormEvent<HTMLFormElement>;
+                            handlePostAsientos(customEvent);
                           }}
                         />
                       )}

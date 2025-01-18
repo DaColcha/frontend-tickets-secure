@@ -4,11 +4,12 @@ import type { NextRequest } from 'next/server';
 
 const PUBLIC_PATHS = [
   '/auth/login',
-  '/api/setCooki',
+  '/api/setCookie',
   '/_next/static',
   '/_next/css',
   '/_next/image',
   '/imgs',
+  '/terminos-condiciones',
 ];
 
 export async function middleware(req: NextRequest) {

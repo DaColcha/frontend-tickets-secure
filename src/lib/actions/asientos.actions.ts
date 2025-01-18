@@ -1,3 +1,4 @@
+import { Pago } from "@/types/pago";
 import { toast } from "sonner";
 
 interface LocalidadesPageProps {
@@ -49,5 +50,26 @@ export async function getAsientos(params: LocalidadesPageProps) {
   } catch (error) {
     console.error("Error en getAsientos:", error);
     toast.error("Error al obtener los asientos");
+  }
+}
+
+export async function postPayment(data: Pago) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    
+    if (!res.ok) {
+      throw new Error("Error al realizar el pago");
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("Error en postPayment:", error);
+    toast.error("Error al realizar el pago");
   }
 }
