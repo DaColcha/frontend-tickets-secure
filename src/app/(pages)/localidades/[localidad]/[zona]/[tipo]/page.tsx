@@ -68,6 +68,8 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   const [emailDisabled, setEmailDisabled] = useState(false);
   const [phoneDisabled, setPhoneDisabled] = useState(false);
   const [aceptTerminos, setAceptTerminos] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   const [isCleaning, setIsCleaning] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const modal2 = useDisclosure();
@@ -567,9 +569,9 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                                 }
                                 fileName="comprobante.pdf"
                               >
-                                {({ loading }) =>
-                                  loading ? (
-                                    ""
+                                <>
+                                  {loading ? (
+                                    <Spinner />
                                   ) : (
                                     <Button
                                       size="sm"
@@ -578,8 +580,8 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                                     >
                                       Descargar comprobante
                                     </Button>
-                                  )
-                                }
+                                  )}
+                                </>
                               </PDFDownloadLink>
                             </div>
                             <div className="flex gap-1">
