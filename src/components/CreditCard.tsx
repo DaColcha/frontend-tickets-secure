@@ -1,5 +1,6 @@
 'use client'
 
+import { validateCardName, validateCardNumber, validateCCV, validateExpirationDate } from "@/lib/utils";
 import { Tarjeta } from "@/types/pago";
 import { Button, Input, ModalFooter, Spinner } from "@nextui-org/react";
 import { useState } from "react";
@@ -21,6 +22,26 @@ export default function CreditCard({ onClose, dataCreditCard, onUpdateCreditCard
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!validateCardNumber(cardNumber)) {
+      setCardNumber("Número de tarjeta inválido");
+      return
+    }
+
+    if (!validateCardName(cardName)) {
+      setCardError("Nombre inválido");
+      return
+    }
+
+    if (!validateCCV(ccvNumber)) {
+      setCardError("CCV inválido");
+      return;
+    }
+
+    if (!validateExpirationDate(expirationDate)) {
+      setExpirationDate("Fecha de vencimiento inválida");
+      return
+    }
 
     const creditCardData: Tarjeta = {
       numero: cardNumber,

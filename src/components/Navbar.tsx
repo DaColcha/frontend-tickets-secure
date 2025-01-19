@@ -25,6 +25,7 @@ export default function NavbarWrapper() {
 
   const handleLogout = async () => {
     deleteCookie();
+    sessionStorage.clear();
     window.location.href = "/login";
   };
 
