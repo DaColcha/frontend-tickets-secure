@@ -35,6 +35,7 @@ import {
   postGeneral,
   postGeneralAbonado,
 } from "@/lib/actions/general.actions";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LocalidadB() {
   const [tickets, setTickets] = useState(null);
@@ -50,7 +51,7 @@ export default function LocalidadB() {
   const [metodoPago, setMetodoPago] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [groupSelected] = React.useState([]);
-  const onCloseRef = useRef<() => void>(() => {});
+  const onCloseRef = useRef<() => void>(() => { });
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [clientNameDisabled, setClientNameDisabled] = useState(false);
@@ -58,6 +59,7 @@ export default function LocalidadB() {
   const [phoneDisabled, setPhoneDisabled] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const modal2 = useDisclosure();
+  const { user } = useAuth();
 
   useEffect(() => {
     setNombreSitio(sessionStorage.getItem("nombreSitio") || "");
@@ -65,7 +67,7 @@ export default function LocalidadB() {
   }, []);
 
   const fetchGeneralA = async () => {
-    const data = await getGeneral({ zona: "B" });
+    const data = await getGeneral({ zona: "B" }, user?.token || '');
     setTickets(data);
   };
 
@@ -80,7 +82,7 @@ export default function LocalidadB() {
     };
 
     try {
-      await postGeneral(dataToSend);
+      await postGeneral(dataToSend, user?.token || '');
       onCloseRef.current();
       toast.success("Compra realizada con éxito");
       setIsSubmitting(false);
@@ -111,7 +113,7 @@ export default function LocalidadB() {
     };
 
     try {
-      await postGeneralAbonado(dataToSend);
+      await postGeneralAbonado(dataToSend, user?.token || '');
       onCloseRef.current();
       toast.success("Compra realizada con éxito");
       setIsSubmitting(false);
@@ -437,9 +439,9 @@ export default function LocalidadB() {
                                         }
                                         fileName="comprobante.pdf"
                                       >
-                                        {({ loading }) =>
-                                          loading ? (
-                                            ""
+                                        <>
+                                          {isLoading ? (
+                                            <Spinner />
                                           ) : (
                                             <Button
                                               size="sm"
@@ -448,8 +450,8 @@ export default function LocalidadB() {
                                             >
                                               Descargar comprobante
                                             </Button>
-                                          )
-                                        }
+                                          )}
+                                        </>
                                       </PDFDownloadLink>
                                     </div>
 

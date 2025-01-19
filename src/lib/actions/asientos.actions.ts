@@ -1,3 +1,4 @@
+
 import { Pago } from "@/types/pago";
 import { toast } from "sonner";
 
@@ -7,10 +8,8 @@ interface LocalidadesPageProps {
   tipo: string;
 }
 
-const token = sessionStorage.getItem("token")
-console.log(token);
+export async function postAsientos(asiento: any, token: string) {
 
-export async function postAsientos(asiento: any) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/compra`, {
       method: "POST",
@@ -29,7 +28,7 @@ export async function postAsientos(asiento: any) {
   }
 }
 
-export async function getAsientos(params: LocalidadesPageProps) {
+export async function getAsientos(params: LocalidadesPageProps, token: string) {
   try {
 
     const res = await fetch(
@@ -54,7 +53,7 @@ export async function getAsientos(params: LocalidadesPageProps) {
   }
 }
 
-export async function postPayment(data: Pago) {
+export async function postPayment(data: Pago, token: string) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/payment`, {
       method: "POST",
@@ -64,7 +63,7 @@ export async function postPayment(data: Pago) {
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!res.ok) {
       throw new Error("Error al realizar el pago");
     }

@@ -5,9 +5,7 @@ interface general {
   zona: string;
 }
 
-const token = sessionStorage.getItem("token")
-
-export async function getGeneral({ zona }: general) {
+export async function getGeneral({ zona }: general, token: string) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/general/${zona}`, {
       method: "GET",
@@ -30,7 +28,7 @@ interface postGeneral {
   boletos: number;
 }
 
-export async function postGeneral({ zona, boletos }: postGeneral) {
+export async function postGeneral({ zona, boletos }: postGeneral, token: string) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/general/compra`, {
       method: "POST",
@@ -49,7 +47,7 @@ export async function postGeneral({ zona, boletos }: postGeneral) {
   }
 }
 
-export async function postGeneralAbonado({ params }: GeneralAbonado) {
+export async function postGeneralAbonado({ params }: GeneralAbonado, token: string) {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API}/general/compra/abonado`,

@@ -47,6 +47,7 @@ import CreditCard from "@/components/CreditCard";
 import { encryptCardData } from "@/lib/utils";
 import { Tarjeta } from "@/types/pago";
 import { obtenerPrecioPorTipo } from "@/types/precio.asientos";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Asientos({ params }: LocalidadesPageProps) {
   const [asientos, setAsientos] = useState<any[]>([]);
@@ -84,19 +85,22 @@ export default function Asientos({ params }: LocalidadesPageProps) {
     fechaVencimiento: "",
   });
 
+  const { user } = useAuth();
+  console.log(user?.token as string, "user");
+
   useEffect(() => {
     fetchAsientos();
     fetchVendidosLocalidad();
   }, []);
 
   const fetchAsientos = async () => {
-    const fetchedAsientos = await getAsientos(params);
+    const fetchedAsientos = await getAsientos(params, user?.token || '');
     console.log(fetchedAsientos, "fech asientos");
     setAsientos(fetchedAsientos);
   };
 
   const fetchVendidosLocalidad = async () => {
-    const fetchedVendidosLocalidad = await getVendidosLocalidad({ params });
+    const fetchedVendidosLocalidad = await getVendidosLocalidad({ params }, user?.token || '');
     console.log(fetchedVendidosLocalidad, "fetch vendidos localidad");
     setDisponiblesLocalidad(fetchedVendidosLocalidad);
   };
@@ -147,7 +151,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
       }
 
       console.log(dataPayment, "data payment");
-      const resPayment = await postPayment(dataPayment)
+      const resPayment = await postPayment(dataPayment, user?.token || '');
       console.log(resPayment, "res payment");
 
       const dataToSend = {
@@ -167,7 +171,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
       };
       console.log(dataToSend, "data to send");
 
-      await postAsientos(dataToSend);
+      await postAsientos(dataToSend, user?.token || '');
 
       onCloseRef.current();
       resetForm();
@@ -248,7 +252,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
 
   const handleLimpiarNoAbonados = async () => {
     setIsCleaning(true);
-    limpiarNoAbonados({ params, groupSelected });
+    limpiarNoAbonados({ params, groupSelected }, user?.token || '');
     setIsCleaning(false);
     window.location.reload();
   };

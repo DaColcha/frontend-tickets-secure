@@ -3,17 +3,19 @@
 import { Card, CardBody, CardHeader, Spinner } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { getTotalVendidosGeneral } from "@/lib/actions/total-vendidos.actions";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CardGeneralTotal({ zona }: { zona: string }) {
   const [totalVendidosGeneral, setTotalVendidosGeneral] = useState<any[]>([]);
   const [totalDisponiblesGeneral, setTotalDisponiblesGeneral] = useState<any[]>(
     []
   );
+  const { user } = useAuth();
 
   const fetchTotalVendidosGeneral = async () => {
     const totalVendidosGeneral = await getTotalVendidosGeneral({
       params: { zona },
-    });
+    }, user?.token || '');
     setTotalVendidosGeneral(totalVendidosGeneral?.vendidos);
     setTotalDisponiblesGeneral(totalVendidosGeneral?.disponibles);
   };

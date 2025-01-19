@@ -23,10 +23,10 @@ export default function CreditCard({ onClose, dataCreditCard, onUpdateCreditCard
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!validateCardNumber(cardNumber)) {
-      setCardNumber("Número de tarjeta inválido");
-      return
-    }
+    //if (!validateCardNumber(cardNumber)) {
+    //  setCardNumber("Número de tarjeta inválido");
+    //  return
+    //}
 
     if (!validateCardName(cardName)) {
       setCardError("Nombre inválido");

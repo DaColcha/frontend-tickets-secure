@@ -19,6 +19,7 @@ import { SearchIcon } from "../icons/SearchIcon";
 import { columns, statusOptions } from "./data";
 import { getClientes } from "@/lib/actions/clientes.actions";
 import { CheckIcon } from "@/icons/CheckIcon";
+import { useAuth } from "@/context/AuthContext";
 
 const INITIAL_VISIBLE_COLUMNS = ["nombreComprador", "actions"];
 
@@ -32,10 +33,11 @@ export default function TablaClientes({
   
   const [clientes, setClientes] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
   const fetchClientes = async () => {
     setIsLoading(true);
-    const response = await getClientes();
+    const response = await getClientes(user?.token || '');
     setIsLoading(false);
     setClientes(response);
   };

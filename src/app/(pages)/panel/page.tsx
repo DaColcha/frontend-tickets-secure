@@ -18,16 +18,18 @@ import CardGeneralTotal from "@/components/Panel/CardGeneralVendidos";
 import { motion } from "framer-motion";
 import { fadeIn } from "../localidades/variants";
 import { getTotalVendidos } from "@/lib/actions/total-vendidos.actions";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Panel() {
   const [totalVendidos, setTotalVendidos] = useState(0);
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchTotalVendidos();
   }, []);
 
   const fetchTotalVendidos = async () => {
-    const totalVendidos = await getTotalVendidos();
+    const totalVendidos = await getTotalVendidos(user?.token || '');
     setTotalVendidos(totalVendidos);
   };
 

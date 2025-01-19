@@ -27,6 +27,7 @@ import {
   getVendidos,
   getTotalVendidosLocalidad,
 } from "@/lib/actions/total-vendidos.actions";
+import { useAuth } from "@/context/AuthContext";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "id",
@@ -42,17 +43,18 @@ export default function TablaLocalidades({ localidad }: { localidad: string }) {
   const [isLoading, setIsLoading] = useState(true);
   const [vendidos, setVendidos] = useState<any[]>([]);
   const [totalVendidosLocalidad, setTotalVendidosLocalidad] = useState(0);
+  const { user } = useAuth();
 
   const fetchTotalVendidosLocalidad = async () => {
     const totalVendidosLocalidad = await getTotalVendidosLocalidad({
       params: { localidad: localidad },
-    });
+    }, user?.token || '');
 
     setTotalVendidosLocalidad(totalVendidosLocalidad);
   };
 
   const fetchVendidos = async () => {
-    const vendidos = await getVendidos({ params: { localidad: localidad } });
+    const vendidos = await getVendidos({ params: { localidad: localidad } }, user?.token || '');
     setVendidos(vendidos);
     setIsLoading(false);
   };

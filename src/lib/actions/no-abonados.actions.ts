@@ -9,12 +9,7 @@ interface NoAbonadosProps {
   groupSelected: number[];
 }
 
-const token = sessionStorage.getItem("token")
-
-export async function limpiarNoAbonados({
-  params,
-  groupSelected,
-}: NoAbonadosProps) {
+export async function limpiarNoAbonados({params, groupSelected,}: NoAbonadosProps, token: string) {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API}/asiento/limpiar-no-abonado`,

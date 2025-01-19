@@ -23,6 +23,7 @@ import { SearchIcon } from "../icons/SearchIcon";
 import { columnsGeneral, statusOptions } from "./data";
 import ButtonEliminarCompraGeneral from "./Buttons/ButtonEliminarGeneral";
 import { getVendidosGeneral } from "@/lib/actions/total-vendidos.actions";
+import { useAuth } from "@/context/AuthContext";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "idCompra",
@@ -36,9 +37,10 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function TablaGeneral() {
   const [isLoad, setIsLoad] = useState(true);
   const [vendidosGeneral, setVendidosGeneral] = useState<any[]>([]);
+  const { user } = useAuth();
 
   const fetchVendidosGeneral = async () => {
-    const response = await getVendidosGeneral();
+    const response = await getVendidosGeneral(user?.token || '');
     setVendidosGeneral(response);
     setIsLoad(false);
   };
