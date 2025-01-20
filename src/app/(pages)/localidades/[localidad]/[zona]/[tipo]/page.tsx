@@ -81,7 +81,6 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   });
 
   const { user } = useAuth();
-  console.log(user?.token as string, "user");
 
   useEffect(() => {
     fetchAsientos();
@@ -90,18 +89,12 @@ export default function Asientos({ params }: LocalidadesPageProps) {
 
   const fetchAsientos = async () => {
     const fetchedAsientos = await getAsientos(params, user?.token || '');
-    console.log(fetchedAsientos, "fech asientos");
     setAsientos(fetchedAsientos);
   };
 
   const fetchVendidosLocalidad = async () => {
     const fetchedVendidosLocalidad = await getVendidosLocalidad({ params }, user?.token || '');
-    console.log(fetchedVendidosLocalidad, "fetch vendidos localidad");
     setDisponiblesLocalidad(fetchedVendidosLocalidad);
-  };
-
-  const handleSwitchChange = () => {
-    setIsSwitchOn(!isSwitchOn);
   };
 
   const resetForm = () => {
@@ -133,8 +126,8 @@ export default function Asientos({ params }: LocalidadesPageProps) {
 
     try {
 
-      const pricioAsiento = obtenerPrecioPorTipo(params.tipo);
-      const total = groupSelected.length * pricioAsiento;
+      const precioAsiento = obtenerPrecioPorTipo(params.tipo);
+      const total = groupSelected.length * precioAsiento;
 
       const encryptedCardData = await encryptCardData(dataCreditCard);
 
@@ -145,9 +138,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
         formaPago: tipoPago === "3" ? "Tarjeta crédito/débito" : metodoPago,
       }
 
-      console.log(dataPayment, "data payment");
       const resPayment = await postPayment(dataPayment, user?.token || '');
-      console.log(resPayment, "res payment");
 
       const dataToSend = {
         localidad: params.localidad,
@@ -164,7 +155,6 @@ export default function Asientos({ params }: LocalidadesPageProps) {
         vendedor: nombreSitio,
         idPago: resPayment.id,
       };
-      console.log(dataToSend, "data to send");
 
       await postAsientos(dataToSend, user?.token || '');
 
@@ -245,13 +235,6 @@ export default function Asientos({ params }: LocalidadesPageProps) {
     setPhoneDisabled(true);
   };
 
-  const handleLimpiarNoAbonados = async () => {
-    setIsCleaning(true);
-    limpiarNoAbonados({ params, groupSelected }, user?.token || '');
-    setIsCleaning(false);
-    window.location.reload();
-  };
-
   const zonaEspecial = ["A0", "B0"];
   const maxColsStyle =
     maxColsValues[`${params.localidad}_${params.zona}_${params.tipo}`].style;
@@ -312,14 +295,6 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                   <p>{groupSelected.join(", ")}</p>
                 </div>
                 <div className="inline-flex items-center gap-5 ml-5">
-                  {/*<div className="inline-flex items-center gap-1">*/}
-                  {/*  <p>Abonados:</p>*/}
-                  {/*  <div className="w-4 h-4 bg-[#d4b47e] rounded-full"></div>*/}
-                  {/*</div>*/}
-                  {/*<div className="inline-flex items-center gap-2">*/}
-                  {/*  <p>No abonados:</p>*/}
-                  {/*  <div className="w-4 h-4 bg-[#163056] rounded-full"></div>*/}
-                  {/*</div>*/}
                   <div className="inline-flex items-center gap-2">
                     <p>Disponibles:</p>
                     <div className="w-4 h-4 bg-content3 rounded-full"></div>

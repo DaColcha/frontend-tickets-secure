@@ -35,7 +35,6 @@ export async function getVendidos({ params }: LocalidadVendidosProps, token: str
       `${process.env.NEXT_PUBLIC_API}/vendidos/${params.localidad}`,
       {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,

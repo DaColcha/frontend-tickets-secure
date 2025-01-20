@@ -123,7 +123,7 @@ export default function OTP({ onClick, username }: Props) {
               type="submit"
               className="bg-[#9c0f2f] text-white text-center w-full font-semibold"
             >
-              Validar Còdigo
+              Validar Código
             </Button>
           </div>
         </form>

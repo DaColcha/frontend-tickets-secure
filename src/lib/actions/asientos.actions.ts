@@ -35,20 +35,17 @@ export async function getAsientos(params: LocalidadesPageProps, token: string) {
       `${process.env.NEXT_PUBLIC_API}/asiento/${params.localidad}/${params.zona}/${params.tipo}`,
       {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
       }
     );
-    console.log(res);
     if (!res.ok) {
       throw new Error("Error al enviar la solicitud");
     }
     return await res.json();
   } catch (error) {
-    console.error("Error en getAsientos:", error);
     toast.error("Error al obtener los asientos");
   }
 }
