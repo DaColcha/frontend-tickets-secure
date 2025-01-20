@@ -20,6 +20,7 @@ import {
 import { useNombreSitio } from "@/app/(pages)/localidades/[localidad]/[zona]/[tipo]/utils";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { deleteCookie } from "@/app/actions";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
   const nombreSitio = useNombreSitio();
 
   const handleLogout = () => {
+    deleteCookie();
     sessionStorage.clear();
     window.location.href = "/login";
   };

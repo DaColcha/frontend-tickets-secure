@@ -43,6 +43,7 @@ import { Tarjeta } from "@/types/pago";
 import { obtenerPrecioPorTipo } from "@/types/precio.asientos";
 import { useAuth } from "@/context/AuthContext";
 import { limpiarNoAbonados } from "@/lib/actions/no-abonados.actions";
+import { getClienteById } from "@/lib/actions/clientes.actions";
 
 export default function Asientos({ params }: LocalidadesPageProps) {
   const [asientos, setAsientos] = useState<any[]>([]);
@@ -152,7 +153,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
         },
         asientosSeleccionados: groupSelected,
         tipoCompra: tipoCompra === "abonado" ? "A" : "N",
-        vendedor: nombreSitio,
+        vendedor: user?.usuario,
         idPago: resPayment.id,
       };
 
@@ -234,6 +235,16 @@ export default function Asientos({ params }: LocalidadesPageProps) {
     setEmailDisabled(true);
     setPhoneDisabled(true);
   };
+
+  const handleClienteExistente = async () => {
+    console.log("Cliente existente", cedula);
+    const data = await getClienteById(cedula, user?.token || '');
+    setCedula(data.cedula);
+    setClientName(data.nombre);
+    setEmail(data.correo);
+    setPhone(data.telefono);
+    console.log(data);
+  }
 
   const zonaEspecial = ["A0", "B0"];
   const maxColsStyle =
@@ -411,15 +422,15 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                             <p className="font-light">{groupSelected.join("-")}</p>
                           </div>
                           <div className="inline-flex gap-2 items-center">
-                            <p className="font-semibold text-lg">Precio:</p>
+                            <p className="font-semibold text-lg">Precio: </p>
                             <p className="font-light">
-                              {groupSelected.length * obtenerPrecioPorTipo(params.tipo)}
+                              $ {groupSelected.length * obtenerPrecioPorTipo(params.tipo)}
                             </p>
                           </div>
                           <Button
                             startContent={<SearchIcon />}
                             size="sm"
-                            onPress={modal2.onOpen}
+                            onPress={handleClienteExistente}
                             className="w-fit bg-[#163056] font-semibold"
                             color="primary"
                           >

@@ -23,6 +23,7 @@ import { useAuth } from "@/context/AuthContext";
 export default function Panel() {
   const [totalVendidos, setTotalVendidos] = useState(0);
   const { user } = useAuth();
+  console.log(user?.token);
 
   useEffect(() => {
     fetchTotalVendidos();

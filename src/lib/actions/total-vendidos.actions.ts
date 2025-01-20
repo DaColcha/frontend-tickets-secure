@@ -55,7 +55,6 @@ export async function getTotalVendidos(token: string) {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API}/vendidos/total`,
       {
-        method: "GET",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,

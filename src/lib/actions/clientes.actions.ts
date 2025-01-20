@@ -17,3 +17,23 @@ export async function getClientes(token: string) {
     toast.error("Error al obtener los clientes");
   }
 }
+
+export async function getClienteById(id: string, token: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API}/clientes/validar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: id,
+    });
+    console.log(id);
+    if (!response.ok) {
+      throw new Error("Error al obtener el cliente");
+    }
+    return await response.json();
+  } catch (error) {
+    toast.error("Error al obtener el cliente");
+  }
+}
