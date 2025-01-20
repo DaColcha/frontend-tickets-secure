@@ -42,6 +42,7 @@ import { encryptCardData } from "@/lib/utils";
 import { Tarjeta } from "@/types/pago";
 import { obtenerPrecioPorTipo } from "@/types/precio.asientos";
 import { useAuth } from "@/context/AuthContext";
+import { limpiarNoAbonados } from "@/lib/actions/no-abonados.actions";
 
 export default function Asientos({ params }: LocalidadesPageProps) {
   const [asientos, setAsientos] = useState<any[]>([]);
