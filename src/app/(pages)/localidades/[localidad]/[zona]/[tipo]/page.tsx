@@ -23,10 +23,6 @@ import {
   cn,
   Spinner,
   useDisclosure,
-  Switch,
-  Tooltip,
-  Accordion,
-  AccordionItem,
 } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -38,10 +34,8 @@ import { motion } from "framer-motion";
 import { fadeIn } from "../../../variants";
 import { DownloadIcon } from "@/components/DownloadIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { DeleteIcon } from "@/components/icons/DeleteIcon";
 import { LocalidadesPageProps } from "@/types/localidad";
 import { getAsientos, postAsientos, postPayment } from "@/lib/actions/asientos.actions";
-import { limpiarNoAbonados } from "@/lib/actions/no-abonados.actions";
 import { getVendidosLocalidad } from "@/lib/actions/total-vendidos.actions";
 import CreditCard from "@/components/CreditCard";
 import { encryptCardData } from "@/lib/utils";
@@ -646,99 +640,6 @@ export default function Asientos({ params }: LocalidadesPageProps) {
               }}
             </ModalContent>
           </Modal>
-          {/* {isLoading ? (
-            ""
-          ) : ( */}
-          <div className="flex flex-1 justify-center m-5">
-            <Accordion
-              itemClasses={{
-                title: "font-normal text-small",
-                indicator: "text-small",
-              }}
-              motionProps={{
-                variants: {
-                  enter: {
-                    y: 0,
-                    opacity: 1,
-                    height: "auto",
-                    transition: {
-                      height: {
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 30,
-                        duration: 1,
-                      },
-                      opacity: {
-                        easings: "ease",
-                        duration: 1,
-                      },
-                    },
-                  },
-                  exit: {
-                    y: -10,
-                    opacity: 0,
-                    height: 0,
-                    transition: {
-                      height: {
-                        easings: "ease",
-                        duration: 0.25,
-                      },
-                      opacity: {
-                        easings: "ease",
-                        duration: 0.3,
-                      },
-                    },
-                  },
-                },
-              }}
-              className="max-w-xl text-center"
-              variant="bordered"
-            >
-              <AccordionItem key="1" aria-label="Acciones" title="Acciones">
-                <div className="inline-flex items-center gap-2 m-1">
-                  <Switch
-                    checked={isSwitchOn}
-                    onChange={handleSwitchChange}
-                    color="warning"
-                    classNames={{
-                      base: cn(
-                        "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
-                        "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-                        "data-[selected=true]:border-[#9c0f2f]"
-                      ),
-                      wrapper: "p-0 h-4 overflow-visible",
-                      thumb: cn(
-                        " bg-[#9c0f2f]  w-6 h-6 border-2 shadow-lg",
-                        "group-data-[hover=true]:border-[#9c0f2f]",
-                        //selected
-                        "group-data-[selected=true]:ml-6",
-                        // pressed
-                        "group-data-[pressed=true]:w-7",
-                        "group-data-[selected]:group-data-[pressed]:ml-4"
-                      ),
-                    }}
-                  >
-                    <div className="flex flex-col gap-1">
-                      <p className="text-medium">Habilitar eliminar</p>
-                      <p className="text-tiny text-default-400">
-                        Habilita la opción de eliminar asientos no abonados
-                      </p>
-                    </div>
-                  </Switch>
-                  <Tooltip content="Eliminar no abonados">
-                    <Button
-                      isDisabled={!isSwitchOn}
-                      onPress={handleLimpiarNoAbonados}
-                      className="w-fit bg-[#9c0f2f] text-white font-semibold"
-                    >
-                      {isCleaning ? <Spinner /> : <DeleteIcon />}
-                    </Button>
-                  </Tooltip>
-                </div>
-              </AccordionItem>
-            </Accordion>
-          </div>
-          {/* )} */}
           <Toaster richColors position="bottom-center" />
         </div>
       </main>
