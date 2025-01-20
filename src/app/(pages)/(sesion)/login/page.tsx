@@ -53,10 +53,13 @@ export default function Login() {
             setBlockedUntil(blockedTime);
             setError(true);
             setErrorMessage(errorMessage);
+          } else if (error.response.status === 400) {
+            setError(true);
+            setErrorMessage(errorMessage);
           } else if (error.response.status === 404) {
             setExist(true);
             setErrorMessage("Usuario no registrado");
-          }
+          } 
         } else {
           console.error("Error de red:", error.message);
           setErrorMessage("Error de red. Inténtalo de nuevo más tarde.");
