@@ -25,7 +25,7 @@ export const useAuth = (): AuthContextProps => {
   return context;
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({children, tokenData}: { children: React.ReactNode, tokenData?: any }) => {
   const [user, setUser] = useState<UserData | null>(null);
 
   const readCookie = () => {
