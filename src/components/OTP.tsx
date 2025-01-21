@@ -25,12 +25,10 @@ export default function OTP({ onClick, username }: Props) {
   const { setUser } = useAuth();
 
   const onChange: OTPProps['onChange'] = (text) => {
-    console.log('onChange:', text);
     setOtpValue(text)
   };
 
   const onInput: OTPProps['onInput'] = (value) => {
-    console.log('onInput:', value);
   };
 
   const sharedProps: OTPProps = {
@@ -45,7 +43,6 @@ export default function OTP({ onClick, username }: Props) {
       username: username as string,
       otp: otpValue as string,
     };
-    console.log(datosOtp);
 
     try {
       const response = await postCodeOtp(datosOtp);
@@ -63,19 +60,12 @@ export default function OTP({ onClick, username }: Props) {
       sessionStorage.setItem("token", response.token);
       sessionStorage.setItem("rol", response.rol);
 
-      console.log('datos recibidos', response);
 
       if (response && response.token) {
 
-        //const res = await axios.post('/api/setCookie', {
-        //  token: response.token,
-        //  rol: response.rol,
-        //})
-
-        document.cookie = `auth_data=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
+        document.cookie = `auth_data=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=14400000`;
 
         setUser(userData);
-        console.log('Token en el contexto después de setToken:', response.token);
 
         if (response.rol === "admin") {
           window.location.href = "/panel";

@@ -50,7 +50,6 @@ export default function ButtonEliminarNoAbonado({
         );
       } catch (error) {
         toast.error("Error al eliminar el abonado");
-        console.error(error);
       } finally {
         toast.success("Se ha eliminado el abonado");
         setTimeout(() => {

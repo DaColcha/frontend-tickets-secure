@@ -38,14 +38,12 @@ export default function Login() {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
         setOpenOTP(true);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
           const errorMessage = error.response.data || "Error desconocido";
-          console.error("Error del backend:", errorMessage);
 
           if (error.response.status === 400 && errorMessage.includes("bloqueada temporalmente")) {
             const blockedTime = new Date().getTime() + 15 * 60 * 1000;
@@ -61,11 +59,9 @@ export default function Login() {
             setErrorMessage("Usuario no registrado");
           } 
         } else {
-          console.error("Error de red:", error.message);
           setErrorMessage("Error de red. Inténtalo de nuevo más tarde.");
         }
       } else {
-        console.error("Error inesperado:", error);
         setErrorMessage("Ocurrió un error inesperado.");
       }
     }

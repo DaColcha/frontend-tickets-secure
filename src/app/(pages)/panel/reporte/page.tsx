@@ -2,15 +2,11 @@
 
 import React from "react";
 
-import { Toaster } from "sonner";
-
 import { motion } from "framer-motion";
 
 import { fadeIn } from "../../localidades/variants";
-import BarChartHero from "@/components/Panel/Charts/TotalBoletosVendidos";
 import TotalBoletosVendidos from "@/components/Panel/Charts/TotalBoletosVendidos";
 
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import VendidosCancha from "@/components/Panel/Charts/VendidosCancha";
 import { TotalGanancias } from "@/components/Panel/Charts/TotalGanancias";

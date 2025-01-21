@@ -60,5 +60,5 @@ export const validateExpirationDate = (date: string): boolean => {
 };
 
 export const validateCCV = (ccv: string): boolean => {
-  return /^\d{3,4}$/.test(ccv);
+  return /^\d{3}$/.test(ccv)
 };

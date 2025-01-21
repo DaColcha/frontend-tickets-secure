@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (cookie) {
       const userData = JSON.parse(decodeURIComponent(cookie.split('=')[1]));
       setUser(userData);
-      console.log('Cookie leída:', userData);
     }
   };
 

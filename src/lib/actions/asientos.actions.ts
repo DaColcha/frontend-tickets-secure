@@ -66,7 +66,6 @@ export async function postPayment(data: Pago, token: string) {
     }
     return await res.json();
   } catch (error) {
-    console.error("Error en postPayment:", error);
     toast.error("Error al realizar el pago");
   }
 }

@@ -32,7 +32,6 @@ export default function ButtonLimpiar() {
       }
     } catch (error) {
       toast.error("Error al limpiar los asientos del partido");
-      console.error(error);
     } finally {
       toast.success("Se han limpiado los asientos del partido");
       setTimeout(() => {

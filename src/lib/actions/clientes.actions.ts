@@ -28,12 +28,11 @@ export async function getClienteById(id: string, token: string) {
       },
       body: id,
     });
-    console.log(id);
     if (!response.ok) {
       throw new Error("Error al obtener el cliente");
     }
     return await response.json();
   } catch (error) {
-    toast.error("Error al obtener el cliente");
+    toast.info("El cliente no existe ingrese sus datos");
   }
 }

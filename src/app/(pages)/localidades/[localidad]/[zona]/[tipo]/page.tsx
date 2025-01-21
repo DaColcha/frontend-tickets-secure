@@ -237,13 +237,15 @@ export default function Asientos({ params }: LocalidadesPageProps) {
   };
 
   const handleClienteExistente = async () => {
-    console.log("Cliente existente", cedula);
     const data = await getClienteById(cedula, user?.token || '');
-    setCedula(data.cedula);
-    setClientName(data.nombre);
-    setEmail(data.correo);
-    setPhone(data.telefono);
-    console.log(data);
+    if (data !== null || data !== undefined) {
+      setCedula(data.cedula);
+      setClientName(data.nombre);
+      setEmail(data.correo);
+      setPhone(data.telefono);
+    } else if (data === null || data === undefined) {
+      toast.info("El cliente no existe");
+    }
   }
 
   const zonaEspecial = ["A0", "B0"];
