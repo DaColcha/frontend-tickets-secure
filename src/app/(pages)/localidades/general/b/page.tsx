@@ -33,7 +33,6 @@ import TablaClientes from "@/components/Clientes/TablaClientes";
 import {
   getGeneral,
   postGeneral,
-  postGeneralAbonado,
 } from "@/lib/actions/general.actions";
 import { useAuth } from "@/context/AuthContext";
 
@@ -71,28 +70,7 @@ export default function LocalidadB() {
     setTickets(data);
   };
 
-  const handleConfirmarNoAbonado = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    const dataToSend = {
-      zona: "B",
-      boletos: cantidad,
-    };
-
-    try {
-      await postGeneral(dataToSend, user?.token || '');
-      onCloseRef.current();
-      toast.success("Compra realizada con éxito");
-      setIsSubmitting(false);
-      await fetchGeneralA();
-    } catch (error) {
-      toast.error("Error al realizar la compra");
-    }
-  };
-
-  const handleConfirmarAbonado = async (
+  const handleConfirmar = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
@@ -113,7 +91,7 @@ export default function LocalidadB() {
     };
 
     try {
-      await postGeneralAbonado(dataToSend, user?.token || '');
+      await postGeneral(dataToSend, user?.token || '');
       onCloseRef.current();
       toast.success("Compra realizada con éxito");
       setIsSubmitting(false);
@@ -258,11 +236,7 @@ export default function LocalidadB() {
                                 <ModalBody>
                                   <form
                                     className="grid gap-4"
-                                    onSubmit={
-                                      tipoCompra === "abonado"
-                                        ? handleConfirmarAbonado
-                                        : handleConfirmarNoAbonado
-                                    }
+                                    onSubmit={handleConfirmar}
                                   >
                                     <RadioGroup
                                       id="tipo-compra"

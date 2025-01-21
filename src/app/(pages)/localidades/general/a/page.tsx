@@ -34,7 +34,6 @@ import { SearchIcon } from "@/components/icons/SearchIcon";
 import {
   getGeneral,
   postGeneral,
-  postGeneralAbonado,
 } from "@/lib/actions/general.actions";
 import { useAuth } from "@/context/AuthContext";
 
@@ -72,27 +71,6 @@ export default function LocalidadA() {
     setTickets(data);
   };
 
-  const handleConfirmarNoAbonado = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    const dataToSend = {
-      zona: "A",
-      boletos: cantidad,
-    };
-
-    try {
-      await postGeneral(dataToSend, user?.token || '');
-      onCloseRef.current();
-      toast.success("Compra realizada con éxito");
-      setIsSubmitting(false);
-      await fetchGeneralA();
-    } catch (error) {
-      toast.error("Error al realizar la compra");
-    }
-  };
-
   const handleConfirmarAbonado = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -114,7 +92,7 @@ export default function LocalidadA() {
     };
 
     try {
-      await postGeneralAbonado(dataToSend, user?.token || '');
+      await postGeneral(dataToSend, user?.token || '');
       onCloseRef.current();
       toast.success("Compra realizada con éxito");
       setIsSubmitting(false);
@@ -258,11 +236,7 @@ export default function LocalidadA() {
                                 <ModalBody>
                                   <form
                                     className="grid gap-4"
-                                    onSubmit={
-                                      tipoCompra === "abonado"
-                                        ? handleConfirmarAbonado
-                                        : handleConfirmarNoAbonado
-                                    }
+                                    onSubmit={handleConfirmarAbonado}
                                   >
                                     <RadioGroup
                                       id="tipo-compra"
