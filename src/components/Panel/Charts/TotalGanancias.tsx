@@ -1,13 +1,23 @@
 import { Card } from "@nextui-org/react";
 import { BarChart, EventProps } from "@tremor/react";
 import { useEffect, useState } from "react";
+import {useAuth} from "@/context/AuthContext";
 
 export function TotalGanancias() {
   const [chartData, setChartData] = useState([]);
   const [totalGananciaSum, setTotalGananciaSum] = useState(0);
   const [value, setValue] = useState<EventProps>(null);
+  const {user} = useAuth();
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API}/reporte/ganancias`)
+      if (!user?.token) return;
+    fetch(`${process.env.NEXT_PUBLIC_API}/reporte/ganancias`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user?.token}`,
+            },
+        }
+        )
       .then((response) => response.json())
       .then((data) => {
         const formattedData = data.map((item: any) => ({
@@ -24,7 +34,7 @@ export function TotalGanancias() {
         setTotalGananciaSum(totalGananciaSum);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [user?.token]);
 
   const dataFormatter = (number: number) =>
     `$${Intl.NumberFormat("us").format(number).toString()}`;

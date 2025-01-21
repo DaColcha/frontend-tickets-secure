@@ -28,10 +28,9 @@ import { useAuth } from "@/context/AuthContext";
 const INITIAL_VISIBLE_COLUMNS = [
   "idCompra",
   "zona",
-  "tipo",
   "cantidadBoletos",
   "comprador",
-  "actions",
+    "sitioVenta"
 ];
 
 export default function TablaGeneral() {
@@ -128,32 +127,20 @@ export default function TablaGeneral() {
               <p>{vendido.zona}</p>
             </>
           );
-        case "tipo":
+        case "cantidadBoletos":
           return (
             <>
-              <p>{vendido.tipo}</p>
-            </>
-          );
-        case "asientos":
-          return (
-            <>
-              <p>{vendido.asientos.join(" - ")}</p>
+              <p>{vendido.cantidadBoletos}</p>
             </>
           );
         case "comprador":
           return (
             <>
-              <p className="font-bold">{vendido.comprador.nombreComprador}</p>
-              <p className="font-light">{vendido.comprador.correoComprador}</p>
+              <p className="font-bold">{vendido.comprador.nombre}</p>
+              <p className="font-light">{vendido.comprador.correo}</p>
               <p className="font-light">
-                {vendido.comprador.telefonoComprador}
+                {vendido.comprador.telefono}
               </p>
-            </>
-          );
-        case "tipoCompra":
-          return (
-            <>
-              <p>{vendido.tipoCompra}</p>
             </>
           );
         case "sitioVenta":
@@ -161,30 +148,6 @@ export default function TablaGeneral() {
             <>
               <p>{vendido.sitioVenta}</p>
             </>
-          );
-
-        case "pago":
-          return (
-            <>
-              <p>{vendido.pago.tipoPago}</p>
-              <p>{vendido.pago.metodoPago}</p>
-            </>
-          );
-        case "plazo":
-          return (
-            <>
-              <p>{vendido.plazo}</p>
-            </>
-          );
-        case "actions":
-          return (
-            <div className="relative flex items-center">
-              <ButtonEliminarCompraGeneral
-                params={{
-                  idCompra: vendido.idCompra,
-                }}
-              />
-            </div>
           );
         default:
           return cellValue;

@@ -52,6 +52,7 @@ export async function getVendidos({ params }: LocalidadVendidosProps, token: str
 
 export async function getTotalVendidos(token: string) {
   try {
+    console.log(token);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API}/vendidos/total`,
       {
@@ -61,10 +62,11 @@ export async function getTotalVendidos(token: string) {
         },
       }
     );
+    console.log(response);
     if (!response.ok) {
       throw new Error("Error al obtener los total vendidos");
     }
-    return await response.json();
+    return await response.json() ;
   } catch (error) {
     toast.error("Error al obtener los total vendidos");
   }

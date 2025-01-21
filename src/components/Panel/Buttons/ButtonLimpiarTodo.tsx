@@ -11,19 +11,25 @@ import {
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { FaRegTrashCan } from "react-icons/fa6";
+import {useAuth} from "@/context/AuthContext";
 
 export default function ButtonLimpiarTodo() {
   const [isCleaning, setIsCleaning] = useState(false);
   const [isCleaned, setIsCleaned] = useState(false);
+  const{user} = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const limpiarTodosAsientos = async () => {
     setIsCleaning(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API}/asiento/limpiar-todo`,
-        {
-          method: "PATCH",
-        }
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${user?.token}`,
+            },
+          }
       );
 
       if (!response.ok) {

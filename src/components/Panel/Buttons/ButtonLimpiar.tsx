@@ -11,20 +11,26 @@ import {
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { FaCalendarXmark } from "react-icons/fa6";
+import {useAuth} from "@/context/AuthContext";
 
 
 export default function ButtonLimpiar() {
   const [isCleaning, setIsCleaning] = useState(false);
   const [isCleaned, setIsCleaned] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {user} = useAuth();
   const limpiarAsientos = async () => {
     setIsCleaning(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API}/asiento/limpiar`,
-        {
-          method: "PATCH",
-        }
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${user?.token}`,
+        },
+      }
       );
 
       if (!response.ok) {

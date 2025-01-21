@@ -24,14 +24,18 @@ export default function Panel() {
   const [totalVendidos, setTotalVendidos] = useState(0);
   const { user } = useAuth();
 
-  useEffect(() => {
-    fetchTotalVendidos();
-  }, []);
+
 
   const fetchTotalVendidos = async () => {
-    const totalVendidos = await getTotalVendidos(user?.token || '');
-    setTotalVendidos(totalVendidos);
+    if (user?.token) {
+      const totalVendidos = await getTotalVendidos(user.token);
+      setTotalVendidos(totalVendidos);
+    }
   };
+
+  useEffect(() => {
+    fetchTotalVendidos();
+  }, [user?.token]);
 
   return (
     <>

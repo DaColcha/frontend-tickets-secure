@@ -2,15 +2,23 @@ import { Card } from "@nextui-org/react";
 import { BarChart } from "@tremor/react";
 import { useEffect, useState } from "react";
 import { FaReceipt } from "react-icons/fa6";
+import {useAuth} from "@/context/AuthContext";
 
 const dataFormatter = (number: number) =>
   Intl.NumberFormat("us").format(number).toString();
 
 export default function TotalBoletosVendidos() {
   const [chartData, setChartData] = useState([]);
-
+  const {user} = useAuth();
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API}/reporte/vendidos/total`)
+      if (!user?.token) return;
+    fetch(`${process.env.NEXT_PUBLIC_API}/reporte/vendidos/total`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user?.token}`,
+            },
+        })
       .then((response) => response.json())
       .then((data) => {
         const total = data.reduce(
@@ -21,7 +29,7 @@ export default function TotalBoletosVendidos() {
         setTotalVendidos(total);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [user?.token]);
 
   const [totalVendidos, setTotalVendidos] = useState(0);
 
