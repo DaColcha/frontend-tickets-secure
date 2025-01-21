@@ -92,7 +92,7 @@ export default function OTP({ onClick, username }: Props) {
             Ingrese el código de verificación
           </h1>
           <p className="text-xs">
-            Si el código no llegó, haga click en el botón "Volver a intentar" y vuelva a ingresar sus datos.
+            Si el código no llegó, haga click en el botón {"Volver a intentar"} y vuelva a ingresar sus datos.
           </p>
           <Flex gap="middle" align="flex-center" vertical>
             <Input.OTP formatter={(str) => str.toUpperCase()} {...sharedProps} />
