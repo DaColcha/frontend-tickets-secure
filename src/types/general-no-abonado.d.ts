@@ -1,14 +1,16 @@
-export interface GeneralAbonado {
-  params: {
-    zona: string;
-    comprador: {
-      correoComprador: string;
-      nombreComprador: string;
-      telefonoComprador: string;
-    };
-    cantidadBoletos: number;
-    sitioVenta: string;
-    pago: string;
-    plazo: string;
-  };
-}
+
+type Comprador = {
+  cedula: string;
+  nombre: string;
+  correo: string;
+  telefono: string;
+};
+
+export type GeneralAbonado = {
+  zona: string;
+  cantidad: number;
+  comprador: Comprador;
+  tipoCompra: "A" | "N";
+  vendedor: string | undefined; 
+  idPago: string | number;    
+};

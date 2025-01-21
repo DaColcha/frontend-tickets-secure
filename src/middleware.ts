@@ -35,7 +35,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL(`/localidades`, req.url))
     }
     if (rol === 'admin' && !pathname.startsWith('/panel')) {
-      return NextResponse.redirect(new URL(`/admin`, req.url))
+      return NextResponse.redirect(new URL(`/panel`, req.url))
     }
 
     return NextResponse.next();

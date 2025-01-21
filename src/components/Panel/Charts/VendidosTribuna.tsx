@@ -2,14 +2,23 @@ import { Card } from "@nextui-org/react";
 import { BarChart, EventProps } from "@tremor/react";
 import { useEffect, useState } from "react";
 import { FaReceipt } from "react-icons/fa6";
+import {useAuth} from "@/context/AuthContext";
 
 export default function VendidosTribuna() {
   const [value, setValue] = useState<EventProps>(null);
+    const { user } = useAuth();
   const [chartData, setChartData] = useState([]);
   const [totalVendidos, setTotalVendidos] = useState(0);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API}/reporte/vendidos/tribuna`)
+      if (!user?.token) return;
+    fetch(`${process.env.NEXT_PUBLIC_API}/reporte/vendidos/tribuna`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user?.token}`,
+            },
+        })
       .then((response) => response.json())
       .then((data) => {
         const formattedData = data.map((item: any) => ({
@@ -26,7 +35,7 @@ export default function VendidosTribuna() {
         setTotalVendidos(totalGananciaSum);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [user?.token]);
 
   return (
     <>

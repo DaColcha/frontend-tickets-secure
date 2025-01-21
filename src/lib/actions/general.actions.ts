@@ -7,7 +7,7 @@ interface general {
 
 export async function getGeneral({ zona }: general, token: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/general/${zona}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/zona-general/${zona}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -28,38 +28,16 @@ interface postGeneral {
   boletos: number;
 }
 
-export async function postGeneral({ zona, boletos }: postGeneral, token: string) {
+export async function postGeneral(asiento: any, token: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/general/compra`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/zona-general/compra`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify({ zona, boletos }),
+      body: JSON.stringify(asiento),
     });
-    if (!res.ok) {
-      throw new Error("Error al crear la compra");
-    }
-    return await res.json();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function postGeneralAbonado({ params }: GeneralAbonado, token: string) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/general/compra/abonado`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify(params),
-      }
-    );
     if (!res.ok) {
       throw new Error("Error al crear la compra");
     }

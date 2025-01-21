@@ -36,7 +36,6 @@ const INITIAL_VISIBLE_COLUMNS = [
   "asientos",
   "comprador",
   "pago",
-  "actions",
 ];
 
 export default function TablaLocalidades({ localidad }: { localidad: string }) {
@@ -96,7 +95,7 @@ export default function TablaLocalidades({ localidad }: { localidad: string }) {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((vendido) =>
-        vendido.comprador.nombreComprador
+        vendido.comprador.nombre
           .toLowerCase()
           .includes(filterValue.toLowerCase())
       );
@@ -158,10 +157,10 @@ export default function TablaLocalidades({ localidad }: { localidad: string }) {
         case "comprador":
           return (
             <>
-              <p className="font-bold">{vendido.comprador.nombreComprador}</p>
-              <p className="font-light">{vendido.comprador.correoComprador}</p>
+              <p className="font-bold">{vendido.comprador.nombre}</p>
+              <p className="font-light">{vendido.comprador.correo}</p>
               <p className="font-light">
-                {vendido.comprador.telefonoComprador}
+                {vendido.comprador.telefono}
               </p>
             </>
           );
@@ -181,29 +180,10 @@ export default function TablaLocalidades({ localidad }: { localidad: string }) {
         case "pago":
           return (
             <>
-              <p className="font-bold">{vendido.pago.tipoPago}</p>
-              <p>{vendido.pago.metodoPago}</p>
+              <p>{vendido.pago}</p>
             </>
           );
-        case "plazo":
-          return (
-            <>
-              <p>{vendido.plazo}</p>
-            </>
-          );
-        case "actions":
-          return (
-            <div className="relative flex items-center">
-              <ButtonEliminarCompra
-                params={{
-                  zona: vendido.zona,
-                  tipo: vendido.tipo,
-                  asientosSeleccionados: vendido.asientos,
-                  localidad: localidad,
-                }}
-              />
-            </div>
-          );
+
         default:
           return cellValue;
       }

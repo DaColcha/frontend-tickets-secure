@@ -12,7 +12,6 @@ import VendidosCancha from "@/components/Panel/Charts/VendidosCancha";
 import { TotalGanancias } from "@/components/Panel/Charts/TotalGanancias";
 import VendidosTribuna from "@/components/Panel/Charts/VendidosTribuna";
 import VendidosGeneral from "@/components/Panel/Charts/VendidosGeneral";
-import TotalAbonados from "@/components/Panel/Charts/TotalAbonados";
 
 export default function Reporte(this: any) {
   return (
@@ -28,22 +27,19 @@ export default function Reporte(this: any) {
         >
           <div className="sm:grid sm:grid-cols-6 sm:grid-rows-6 flex flex-col gap-4 pb-5">
             <div className="col-span-2 row-span-2">
-              <VendidosCancha />
+              <VendidosCancha/>
             </div>
             <div className="col-span-2 row-span-2 col-start-3">
-              <VendidosTribuna />
+              <VendidosTribuna/>
             </div>
             <div className="col-span-2 row-span-2 col-start-5">
-              <VendidosGeneral />
+              <VendidosGeneral/>
             </div>
             <div className="col-span-3 row-span-2 row-start-3">
-              <TotalBoletosVendidos />
+              <TotalBoletosVendidos/>
             </div>
-            <div className="col-span-3 row-span-2 col-start-4 row-start-3">
-              <TotalAbonados />
-            </div>
-            <div className="col-span-4 row-span-2 col-start-2 row-start-5">
-              <TotalGanancias />
+            <div className="col-span-3 row-span-2 row-start-3">
+              <TotalGanancias/>
             </div>
           </div>
         </motion.div>
