@@ -39,14 +39,16 @@ export default function TablaGeneral() {
   const { user } = useAuth();
 
   const fetchVendidosGeneral = async () => {
-    const response = await getVendidosGeneral(user?.token || '');
-    setVendidosGeneral(response);
-    setIsLoad(false);
+    if(user?.token){
+      const response = await getVendidosGeneral(user?.token || '');
+      setVendidosGeneral(response);
+      setIsLoad(false);
+    }
   };
 
   useEffect(() => {
     fetchVendidosGeneral();
-  }, []);
+  }, [user?.token]);
 
   type Vendido = (typeof vendidosGeneral)[0];
   const [filterValue, setFilterValue] = React.useState("");

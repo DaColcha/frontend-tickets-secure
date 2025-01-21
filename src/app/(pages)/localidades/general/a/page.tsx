@@ -122,7 +122,7 @@ export default function LocalidadA() {
         encryptedData: encryptedCardData,
         total: parseFloat(total.toFixed(2)),
         useCard: showCreditCard ? true : false,
-        formaPago: tipoPago === "3" ? "Tarjeta crédito/débito" : metodoPago,
+        formaPago: tipoPago === "3" ? "Tarjeta crédito/débito" : tipoPago,
       }
 
       const resPayment = await postPayment(dataPayment, user?.token || '');
@@ -397,8 +397,8 @@ export default function LocalidadA() {
                                             value={metodoPago}
                                             onChange={(e) => setTipoPago(e.target.value)}
                                           >
-                                            <SelectItem key={1}>Efectivo</SelectItem>
-                                            <SelectItem key={2}>Transferencia</SelectItem>
+                                            <SelectItem key="Efectivo">Efectivo</SelectItem>
+                                            <SelectItem key="Transferencia">Transferencia</SelectItem>
                                           </Select>
                                         )}
 
@@ -412,7 +412,7 @@ export default function LocalidadA() {
                                             onChange={(e) => setTipoPago(e.target.value)}
                                           >
                                             <SelectItem key={3}>Tarjeta crédito/débito</SelectItem>
-                                            <SelectItem key={4}>Convenio instituciones</SelectItem>
+                                            <SelectItem key="Convenio institucional">Convenio institucional</SelectItem>
                                           </Select>
                                         )}
 
