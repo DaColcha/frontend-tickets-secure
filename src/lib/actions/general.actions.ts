@@ -28,7 +28,7 @@ interface postGeneral {
   boletos: number;
 }
 
-export async function postGeneral({ params }: GeneralAbonado, token: string) {
+export async function postGeneral(asiento: any, token: string) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/zona-general/compra`, {
       method: "POST",
@@ -36,7 +36,7 @@ export async function postGeneral({ params }: GeneralAbonado, token: string) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify(params),
+      body: JSON.stringify(asiento),
     });
     if (!res.ok) {
       throw new Error("Error al crear la compra");
