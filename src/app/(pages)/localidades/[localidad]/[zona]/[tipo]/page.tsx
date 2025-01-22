@@ -127,7 +127,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
 
     try {
 
-      const precioAsiento = obtenerPrecioPorTipo(params.tipo);
+      const precioAsiento = obtenerPrecioPorTipo(params.localidad == "C" ? "C_SILLAS" :params.tipo);
       const total = groupSelected.length * precioAsiento;
 
       const encryptedCardData = await encryptCardData(dataCreditCard);
@@ -427,7 +427,7 @@ export default function Asientos({ params }: LocalidadesPageProps) {
                           <div className="inline-flex gap-2 items-center">
                             <p className="font-semibold text-lg">Precio: </p>
                             <p className="font-light">
-                              $ {groupSelected.length * obtenerPrecioPorTipo(params.tipo)}
+                              $ {groupSelected.length * obtenerPrecioPorTipo(params.localidad == "C" ? "C_SILLAS" :params.tipo)}
                             </p>
                           </div>
                           <Button
