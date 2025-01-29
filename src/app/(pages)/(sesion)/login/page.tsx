@@ -142,7 +142,7 @@ export default function Login() {
                 isRequired
                 id="usuario"
                 type="text"
-                label="Sitio de venta"
+                label="Usuario"
                 labelPlacement="inside"
                 value={usuario}
                 onChange={(e) => setUsuario(e.target.value)}
